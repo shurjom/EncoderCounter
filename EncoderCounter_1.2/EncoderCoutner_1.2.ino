@@ -13,41 +13,40 @@ Feet and meters switch button
 */
 
 
-
 // this constant won't change:
 const int encoderPin = 0; // the pin that the pushbutton is attached to
 const int ledPin = 13; // the pin that the LED is attached to
 const int resetPin = 2;
 const int onOffPin = 3;
-
-//
-
+// 
 // Variables will change:
 int encoderPulseCounter = 0; // counter for the number of button presses
 int encoderState = 0; // current state of the button
 int lastencoderState = 0; // previous state of the button
-int resetState = 0;
-int onOffState = 0;
-
+int resetState = 0; // current state of reset button
+int onOffState = 0; // current state of on/off button
 void setup()
 {
 	// initialize the button pin as a input:
 	pinMode(encoderPin, INPUT);
 	// initialize the LED as an output:
 	pinMode(ledPin, OUTPUT);
+	// initialize reset button as an input
 	pinMode(resetPin, INPUT);
-        pinMode(onOffPin, INPUT);
+	//initialize on/off button as an input
+	pinMode(onOffPin, INPUT);
 	// initialize serial communication:
 	Serial.begin(9600);
 }
 
 void loop()
 {
-	// read the pushbutton input pin:
+	// read the encoder pulses through input pin:
 	encoderState = digitalRead(encoderPin);
+	// read reset signal
 	resetState = digitalRead(resetPin);
-        onOffState = digitalRead(onOffPin);
-
+	// read on/off signal
+	onOffState = digitalRead(onOffPin);
 	// compare the encoderState to its previous state
 	if (encoderState != lastencoderState)
 	{
@@ -74,17 +73,15 @@ void loop()
 	if (resetState == HIGH)
 	{
 		encoderPulseCounter = 0;
-                Serial.println("Counter reset");
+		Serial.println("Counter reset");
 	}
-        if (onOffState == HIGH)
-        {
-                Serial.println("Encoder on");
-        }        
-        // save the current state as the last state,
+	if (onOffState == HIGH)
+	{
+		Serial.println("Encoder on");
+	}
+	// save the current state as the last state,
 	// for next time through the loop
 	lastencoderState = encoderState;
-
-
 	// turns on the LED every 10 pulse by
 	// checking the modulo of the button pulse counter.
 	// the modulo function gives you the remainder of
@@ -98,5 +95,3 @@ void loop()
 		digitalWrite(ledPin, LOW);
 	}
 }
-
-
